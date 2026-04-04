@@ -1,0 +1,14 @@
+id = "maho"
+name = "Maho"
+description = "Maho Intelligence LSP integration for the Maho ecommerce platform"
+version = "0.0.1"
+schema_version = 1
+authors = ["Maho <info@mahocommerce.com>"]
+repository = "https://github.com/mahocommerce/maho-zed"
+
+[language_servers.maho-intelligence-lsp]
+name = "Maho Intelligence LSP"
+languages = ["PHP"]
+
+[language_servers.maho-intelligence-lsp.language_ids]
+PHP = "php"
