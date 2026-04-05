@@ -8,7 +8,8 @@ repository = "https://github.com/mahocommerce/maho-zed"
 
 [language_servers.maho-intelligence-lsp]
 name = "Maho Intelligence LSP"
-languages = ["PHP"]
+languages = ["PHP", "XML"]
 
 [language_servers.maho-intelligence-lsp.language_ids]
 PHP = "php"
+XML = "xml"
