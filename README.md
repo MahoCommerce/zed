@@ -12,7 +12,7 @@ Provides code completion, hover information, go-to-definition, and diagnostics f
 ## Setup
 
 1. Install the extension:
-   - **Zed Extensions**: Search for "Maho" in Zed's Extensions panel (`zed: extensions` from the command palette)
+   - **Zed Extensions**: Marketplace listing is work in progress
    - **Manual install**: Clone this repository, then run `zed: install dev extension` from the command palette and select the cloned directory
 2. Create a `.zed/settings.json` in your Maho project root:
 
