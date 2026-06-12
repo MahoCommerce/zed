@@ -12,7 +12,7 @@ Provides code completion, hover information, go-to-definition, and diagnostics f
 ## Setup
 
 1. Install the extension:
-   - **Zed Extensions**: Marketplace listing is [work in progress](https://github.com/zed-industries/extensions/pull/5501)
+   - **Zed Extensions** (recommended): Install [Maho](https://zed.dev/extensions/maho-lsp) from the Zed marketplace, or run `zed: extensions` from the command palette and search for "Maho"
    - **Manual install**: Clone this repository, then run `zed: install dev extension` from the command palette and select the cloned directory
 2. Create a `.zed/settings.json` in your Maho project root:
 
