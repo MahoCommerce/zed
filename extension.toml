@@ -1,7 +1,7 @@
-id = "maho-intelligence"
+id = "maho-lsp"
 name = "Maho"
 description = "Maho Intelligence LSP integration for the Maho ecommerce platform"
-version = "0.9.0"
+version = "0.9.1"
 schema_version = 1
 authors = ["Maho <info@mahocommerce.com>"]
 repository = "https://github.com/mahocommerce/maho-zed"
