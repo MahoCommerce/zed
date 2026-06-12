@@ -1,5 +1,7 @@
 # Maho for Zed
 
+[![Get from Marketplace](https://img.shields.io/badge/Get_from-Marketplace-000000?style=for-the-badge&logo=zedindustries&logoColor=white)](https://zed.dev/extensions/maho-lsp)
+
 [Maho Intelligence](https://mahocommerce.com) LSP integration for the [Zed](https://zed.dev) editor.
 
 Provides code completion, hover information, go-to-definition, and diagnostics for Maho's class alias system across PHP and XML files.
