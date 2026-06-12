@@ -1,4 +1,3 @@
-use std::{env, fs};
 use zed_extension_api::{self as zed, settings::LspSettings, Result};
 
 struct MahoExtension;
@@ -21,27 +20,21 @@ impl zed::Extension for MahoExtension {
                 return Ok(zed::Command {
                     command: path,
                     args: binary.arguments.unwrap_or_default(),
-                    env: binary
-                        .env
-                        .unwrap_or_default()
-                        .into_iter()
-                        .collect(),
+                    env: binary.env.unwrap_or_default().into_iter().collect(),
                 });
             }
         }
 
-        // Auto-detect: find maho CLI in worktree root
-        let worktree_root = env::current_dir()
-            .map_err(|e| format!("could not determine working directory: {e}"))?;
-
-        let maho_path = worktree_root.join("maho");
-
-        if !fs::metadata(&maho_path).is_ok_and(|m| m.is_file()) {
+        // Auto-detect: ensure this is a Maho project by checking for the
+        // `maho` CLI file in the worktree root, using the Zed worktree API.
+        if worktree.read_text_file("maho").is_err() {
             return Err(
                 "This does not appear to be a Maho project (no `maho` file found in the project root)."
                     .to_string(),
             );
         }
+
+        let maho_path = format!("{}/maho", worktree.root_path());
 
         let php_path = worktree.which("php").ok_or_else(|| {
             "Could not find `php` on PATH. PHP is required to run the Maho Intelligence LSP server."
@@ -50,10 +43,7 @@ impl zed::Extension for MahoExtension {
 
         Ok(zed::Command {
             command: php_path,
-            args: vec![
-                maho_path.to_string_lossy().to_string(),
-                "dev:lsp:start".to_string(),
-            ],
+            args: vec![maho_path, "dev:lsp:start".to_string()],
             env: Default::default(),
         })
     }
