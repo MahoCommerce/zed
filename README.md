@@ -2,9 +2,12 @@
 
 [![Get from Marketplace](https://img.shields.io/badge/Get_from-Marketplace-000000?style=for-the-badge&logo=zedindustries&logoColor=white)](https://zed.dev/extensions/maho-lsp)
 
-[Maho Intelligence](https://mahocommerce.com) LSP integration for the [Zed](https://zed.dev) editor.
+[Maho Intelligence](https://mahocommerce.com) integration for the [Zed](https://zed.dev) editor.
 
-Provides code completion, hover information, go-to-definition, and diagnostics for Maho's class alias system across PHP and XML files.
+Provides two things:
+
+- **Editor intelligence (LSP)** — code completion, hover information, go-to-definition, and diagnostics for Maho's class alias system across PHP and XML files.
+- **AI agent intelligence (MCP)** — exposes Maho's runtime configuration to Zed's AI agent through a [Model Context Protocol](https://modelcontextprotocol.io) server, so the agent can resolve aliases, inspect rewrites, read the merged config, and more instead of guessing.
 
 ## Prerequisites
 
@@ -35,7 +38,7 @@ This configures:
 
 > **Note:** Intelephense requires [Node.js](https://nodejs.org) installed on your system. Zed will download Intelephense automatically on first use.
 
-## Configuration
+## Editor (LSP) configuration
 
 By default, the extension auto-detects `php` on your PATH and the `maho` CLI in the project root. You can override this in your Zed settings:
 
@@ -69,9 +72,82 @@ By default, the extension auto-detects `php` on your PATH and the `maho` CLI in 
 }
 ```
 
+## AI agent integration (MCP)
+
+The extension also registers a [Model Context Protocol](https://modelcontextprotocol.io) server (`maho-intelligence-mcp`) that gives Zed's AI agent direct access to your project's Maho configuration, so it can understand how the application is wired instead of inferring from source alone.
+
+It runs `php maho dev:mcp:start` from the project root and exposes tools for:
+
+- Resolving and listing class aliases (model, block, helper, resource model)
+- Listing class rewrites with conflict detection
+- Reading the merged XML configuration for any path
+- Listing modules, events/observers, cron jobs, and routes
+- Inspecting EAV entity types and attributes
+- Reading database table schemas, ACL resources, the admin menu, and the store hierarchy
+- Resolving template fallback chains
+
+### Enabling it
+
+Zed disables every MCP server by default and requires you to opt in (running an MCP server feeds project data to the AI agent). Enable it in one of two ways:
+
+- **Per machine:** open the **Agent Panel**, go to its settings, find **Maho** under *Model Context Protocol (MCP) Servers*, and flip the toggle on.
+- **Per project (recommended for teams):** commit the following to your project's `.zed/settings.json` so it's on for everyone who opens the project:
+
+```json
+{
+  "context_servers": {
+    "maho-intelligence-mcp": {
+      "source": "extension",
+      "enabled": true,
+      "settings": {}
+    }
+  }
+}
+```
+
+Once enabled, Zed launches the server and the status dot turns green when it connects.
+
+### Configuration
+
+By default the server is launched as `php maho dev:mcp:start`, relying on `php` being on Zed's `PATH` and the `maho` CLI being in the project root.
+
+> **Note:** Zed ignores the `command` field for extension-provided servers — it always invokes the extension's own launch command. So you can't override the full command the way you can for the LSP. Use the `php_path` setting below instead, or define a separate custom server (see Docker).
+
+If `php` isn't found (for example, when Zed is launched from the macOS Dock with a minimal `PATH`), set an absolute path via the server's `settings`:
+
+```json
+{
+  "context_servers": {
+    "maho-intelligence-mcp": {
+      "source": "extension",
+      "enabled": true,
+      "settings": {
+        "php_path": "/opt/homebrew/bin/php"
+      }
+    }
+  }
+}
+```
+
+### Docker
+
+Because the extension server can only customize the PHP binary (not the whole command), run it through Docker as a separate **custom** server instead:
+
+```json
+{
+  "context_servers": {
+    "maho-mcp-docker": {
+      "source": "custom",
+      "command": "docker",
+      "args": ["compose", "exec", "-T", "php", "php", "maho", "dev:mcp:start"]
+    }
+  }
+}
+```
+
 ## Features
 
-All features work across both **PHP** and **XML** files.
+The editor (LSP) features below work across both **PHP** and **XML** files.
 
 ### Completion
 
